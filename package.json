@@ -1,0 +1,34 @@
+{
+  "name": "hackyeah_orlen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/app.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "node ./app/bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/B0dz1o/Hackyeah18ledger.git"
+  },
+  "keywords": [
+    "hyperledger",
+    "hackathon",
+    "hackyeah"
+  ],
+  "author": "Multiple",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/B0dz1o/Hackyeah18ledger/issues"
+  },
+  "homepage": "https://github.com/B0dz1o/Hackyeah18ledger#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0"
+  }
+}
