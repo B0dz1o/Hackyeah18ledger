@@ -15,7 +15,15 @@ router.get('/addPoints/:points/for/:userName', (req, res, next) => {
   var prevBalance = Number.parseInt(prevBalanceStr, 10) || 0;
   var currentBalance = prevBalance + pointsAdded;
   localStorage.setItem(userName, currentBalance);
-  res.send({pointsAdded, currentBalance, userName});
+  res.send({ pointsAdded, currentBalance, userName });
+});
+
+router.get('/currentBalanceOf/:userName', (req, res, next) => {
+  var userName = req.params.userName;
+  var currentBalanceStr = localStorage.getItem(userName);
+  var currentBalance = Number.parseInt(currentBalanceStr, 10) || 0;
+  localStorage.setItem(userName, currentBalance);
+  res.send({ currentBalance, userName });
 });
 
 points = 0;
