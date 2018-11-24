@@ -1,6 +1,6 @@
 {
   "name": "hackyeah_orlen",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "app/app.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "hackathon",
     "hackyeah"
   ],
-  "author": "Multiple",
+  "author": "Marina Kholodinskaya, Marcin Dudek, Piotr Bogdan",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/B0dz1o/Hackyeah18ledger/issues"
