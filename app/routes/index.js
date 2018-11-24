@@ -11,40 +11,41 @@ router.get('/', function(req, res, next) {
 router.get('/addPoints/:points/for/:userName', (req, res, next) => {
   var userName = req.params.userName;
   var pointsAdded = Number.parseInt(req.params.points, 10);
-  var prevBalanceStr = localStorage.getItem(userName);
-  var prevBalance = Number.parseInt(prevBalanceStr, 10) || 0;
+  var marshalled = localStorage.getItem(userName);
+  var userData = JSON.parse(marshalled);
+  if (userData === null) {
+    userData = { userName, transactions: [], balance: 0}
+  }
+  userData.transactions.push({
+    pointsAdded,
+    date: new Date()
+  });
+  var prevBalance = userData.balance
   var currentBalance = prevBalance + pointsAdded;
-  localStorage.setItem(userName, currentBalance);
+  userData.balance = currentBalance;
+  console.log(JSON.stringify(userData));
+  localStorage.setItem(userName, JSON.stringify(userData));
   res.send({ pointsAdded, currentBalance, userName });
 });
 
 router.get('/currentBalanceOf/:userName', (req, res, next) => {
   var userName = req.params.userName;
-  var currentBalanceStr = localStorage.getItem(userName);
-  var currentBalance = Number.parseInt(currentBalanceStr, 10) || 0;
-  localStorage.setItem(userName, currentBalance);
+  var userData = JSON.parse(localStorage.getItem(userName));
+  if (userData === null) {
+    userData = { userName, transactions: [], balance: 0}
+  }
+  var currentBalance = userData.balance;
   res.send({ currentBalance, userName });
 });
 
-points = 0;
-
-router.get('/addPoints/:points', (req, res, next) => {
-  var newPoints = Number.parseInt(req.params.points, 10);
-  points += newPoints;
-  res.send({pointsAdded: newPoints, currentState: points});
-});
-
-router.get('/addPointsVisual/:points', (req, res, next) => {
-  var newPoints = Number.parseInt(req.params.points, 10);
-  points += newPoints;
-  var resultPoints = `Dodano punkty: ${ req.params.points }!\n
-  Obecny stan: ${points}`;
-  res.render('index', { title:  resultPoints});
-});
-
-router.get('/currentBalance', (req, res, next) => {
-  var currentBalance = points;
-  res.send({ currentBalance })
+router.get('/transactionHistoryOf/:userName', (req, res, next) => {
+  var userName = req.params.userName;
+  var userData = JSON.parse(localStorage.getItem(userName));
+  if (userData === null) {
+    userData = { userName, transactions: [], balance: 0}
+  }
+  var history = userData.transactions
+  res.send({ history });
 });
 
 module.exports = router;
