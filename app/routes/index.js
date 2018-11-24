@@ -1,9 +1,21 @@
 var express = require('express');
 var router = express.Router();
+var LocalStorage = require('node-localstorage').LocalStorage,
+localStorage = new LocalStorage('./balances');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.get('/addPoints/:points/for/:userName', (req, res, next) => {
+  var userName = req.params.userName;
+  var pointsAdded = Number.parseInt(req.params.points, 10);
+  var prevBalanceStr = localStorage.getItem(userName);
+  var prevBalance = Number.parseInt(prevBalanceStr, 10) || 0;
+  var currentBalance = prevBalance + pointsAdded;
+  localStorage.setItem(userName, currentBalance);
+  res.send({pointsAdded, currentBalance, userName});
 });
 
 points = 0;

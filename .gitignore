@@ -80,5 +80,8 @@ typings/
 # FuseBox cache
 .fusebox/
 
+# node-localstorage
+/balances/
+
 # End of https://www.gitignore.io/api/node
 
