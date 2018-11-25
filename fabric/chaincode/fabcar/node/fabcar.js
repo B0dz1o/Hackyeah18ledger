@@ -38,22 +38,24 @@ let Chaincode = class {
     }
   }
 
-  async queryUser(stub, args) {
-    if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting user name ex: "Jan Kowalski"');
-    }
-    let userName = args[0];
+  // async queryCustomer(stub, args) {
+  //   if (args.length != 1) {
+  //     throw new Error('Incorrect number of arguments. Expecting user name ex: "Jan Kowalski"');
+  //   }
 
-    let users = await this.queryAllCustomers(stub, args); //get the user from chaincode state
-    let selectedUser = users.filter( (v,i,a) => {
-      return v.Record.userName === userName;
-    })[0];
+  //   let userName = args[0];
+  //   let method = this.queryAllCustomers;
 
-    return Buffer.from(JSON.stringify(selectedUser));
-    // if (!carAsBytes || carAsBytes.toString().length <= 0) {
-    //   throw new Error(carNumber + ' does not exist: ');
-    // }
-  }
+  //   let users = await method(stub, args); //get the user from chaincode state
+  //   let selectedUser = users.filter( (v,i,a) => {
+  //     return v.Record.userName === userName;
+  //   })[0];
+
+  //   return Buffer.from(JSON.stringify(selectedUser));
+  //   // if (!carAsBytes || carAsBytes.toString().length <= 0) {
+  //   //   throw new Error(carNumber + ' does not exist: ');
+  //   // }
+  // }
 
   async initLedger(stub, args) {
     console.info('============= START : Initialize Ledger ===========');
@@ -173,17 +175,19 @@ let Chaincode = class {
     }
   }
 
-  async addPoints(stub, args) {
+  async setUser(stub, args) {
     console.info('============= START : changeCarOwner ===========');
-    if (args.length != 2) {
-      throw new Error('Incorrect number of arguments. Expecting 2');
+    if (args.length != 4) {
+      throw new Error('Incorrect number of arguments. Expecting 4');
     }
+    var userName = args[1];
+    var balance = args[2];
+    var transactionsStr = args[3];
+    var transactions = JSON.parse(transactionsStr);
+    var user = { userName, balance, transactions };
+    user.docType = 'customer';
 
-    let carAsBytes = await stub.getState(args[0]);
-    let car = JSON.parse(carAsBytes);
-    car.owner = args[1];
-
-    await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
+    await stub.putState(args[0], Buffer.from(JSON.stringify(user)));
     console.info('============= END : changeCarOwner ===========');
   }
 };
