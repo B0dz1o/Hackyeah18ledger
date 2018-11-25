@@ -2,4 +2,9 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  h2= "Testowe zapytania"
+  a(href="/addPoints/1/for/testUser") Dodaj punkty
+  p
+  a(href="/currentBalanceOf/testUser") Stan konta
+  p
+  a(href="/transactionHistoryOf/testUser") Historia transakcji
