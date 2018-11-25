@@ -55,30 +55,30 @@ let Chaincode = class {
   async initLedger(stub, args) {
     console.info('============= START : Initialize Ledger ===========');
     let cars = [];
-    // cars.push({
-    //   make: 'Toyota',
-    //   model: 'Prius',
-    //   color: 'blue',
-    //   owner: 'Tomoko'
-    // });
-    // cars.push({
-    //   make: 'Ford',
-    //   model: 'Mustang',
-    //   color: 'red',
-    //   owner: 'Brad'
-    // });
-    // cars.push({
-    //   make: 'Hyundai',
-    //   model: 'Tucson',
-    //   color: 'green',
-    //   owner: 'Jin Soo'
-    // });
-    // cars.push({
-    //   make: 'Volkswagen',
-    //   model: 'Passat',
-    //   color: 'yellow',
-    //   owner: 'Max'
-    // });
+    cars.push({
+      make: 'Toyota',
+      model: 'Prius',
+      color: 'blue',
+      owner: 'Tomoko'
+    });
+    cars.push({
+      make: 'Ford',
+      model: 'Mustang',
+      color: 'red',
+      owner: 'Brad'
+    });
+    cars.push({
+      make: 'Hyundai',
+      model: 'Tucson',
+      color: 'green',
+      owner: 'Jin Soo'
+    });
+    cars.push({
+      make: 'Volkswagen',
+      model: 'Passat',
+      color: 'yellow',
+      owner: 'Max'
+    });
     cars.push({
       make: 'Tesla',
       model: 'S',
@@ -97,24 +97,24 @@ let Chaincode = class {
       color: 'white',
       owner: 'Aarav'
     });
-    // cars.push({
-    //   make: 'Fiat',
-    //   model: 'Punto',
-    //   color: 'violet',
-    //   owner: 'Pari'
-    // });
-    // cars.push({
-    //   make: 'Tata',
-    //   model: 'Nano',
-    //   color: 'indigo',
-    //   owner: 'Valeria'
-    // });
-    // cars.push({
-    //   make: 'Holden',
-    //   model: 'Barina',
-    //   color: 'brown',
-    //   owner: 'Shotaro'
-    // });
+    cars.push({
+      make: 'Fiat',
+      model: 'Punto',
+      color: 'violet',
+      owner: 'Pari'
+    });
+    cars.push({
+      make: 'Tata',
+      model: 'Nano',
+      color: 'indigo',
+      owner: 'Valeria'
+    });
+    cars.push({
+      make: 'Holden',
+      model: 'Barina',
+      color: 'brown',
+      owner: 'Shotaro'
+    });
 
     for (let i = 0; i < cars.length; i++) {
       cars[i].docType = 'car';
@@ -146,6 +146,7 @@ let Chaincode = class {
 
     let startKey = 'CAR0';
     let endKey = 'CAR999';
+    endKey = 'CAR1';
 
     let iterator = await stub.getStateByRange(startKey, endKey);
 
