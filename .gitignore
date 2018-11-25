@@ -83,5 +83,8 @@ typings/
 # node-localstorage
 /balances/
 
+bin/
+hfc-key-store/
+
 # End of https://www.gitignore.io/api/node
 
