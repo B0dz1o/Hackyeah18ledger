@@ -10,15 +10,15 @@ const util = require('util');
 
 let Chaincode = class {
 
-  // The Init method is called when the Smart Contract 'fabcar' is instantiated by the blockchain network
+  // The Init method is called when the Smart Contract 'Orlen' is instantiated by the blockchain network
   // Best practice is to have any Ledger initialization in separate function -- see initLedger()
   async Init(stub) {
-    console.info('=========== Instantiated fabcar chaincode ===========');
+    console.info('=========== Instantiated Orlen chaincode ===========');
     return shim.success();
   }
 
   // The Invoke method is called as a result of an application request to run the Smart Contract
-  // 'fabcar'. The calling application program has also specified the particular smart contract
+  // 'Orlen'. The calling application program has also specified the particular smart contract
   // function to be called, with arguments
   async Invoke(stub) {
     let ret = stub.getFunctionAndParameters();
@@ -38,115 +38,112 @@ let Chaincode = class {
     }
   }
 
-  async queryCar(stub, args) {
+  async queryUser(stub, args) {
     if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting CarNumber ex: CAR01');
+      throw new Error('Incorrect number of arguments. Expecting user name ex: "Jan Kowalski"');
     }
-    let carNumber = args[0];
+    let userName = args[0];
 
-    let carAsBytes = await stub.getState(carNumber); //get the car from chaincode state
-    if (!carAsBytes || carAsBytes.toString().length <= 0) {
-      throw new Error(carNumber + ' does not exist: ');
-    }
-    console.log(carAsBytes.toString());
-    return carAsBytes;
+    let users = await this.queryAllCustomers(stub, args); //get the user from chaincode state
+    let selectedUser = users.filter( (v,i,a) => {
+      return v.Record.userName === userName;
+    })[0];
+
+    return Buffer.from(JSON.stringify(selectedUser));
+    // if (!carAsBytes || carAsBytes.toString().length <= 0) {
+    //   throw new Error(carNumber + ' does not exist: ');
+    // }
   }
 
   async initLedger(stub, args) {
     console.info('============= START : Initialize Ledger ===========');
-    let cars = [];
-    cars.push({
-      make: 'Toyota',
-      model: 'Prius',
-      color: 'blue',
-      owner: 'Tomoko'
+    let customers = [];
+    customers.push({
+      "userName": "darek",
+      "transactions": [
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:38:01.121Z"
+        },
+        {
+          "pointsAdded": 10,
+          "date": "2018-11-24T21:39:32.625Z"
+        },
+        {
+          "pointsAdded": 1,
+          "date": "2018-11-24T21:59:29.767Z"
+        }
+      ],
+      "balance": 16
     });
-    cars.push({
-      make: 'Ford',
-      model: 'Mustang',
-      color: 'red',
-      owner: 'Brad'
+    customers.push({
+      "userName": "piotrek",
+      "transactions": [
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:42:42.714Z"
+        },
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:42:46.605Z"
+        },
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:42:47.581Z"
+        }
+      ],
+      "balance": 15
     });
-    cars.push({
-      make: 'Hyundai',
-      model: 'Tucson',
-      color: 'green',
-      owner: 'Jin Soo'
-    });
-    cars.push({
-      make: 'Volkswagen',
-      model: 'Passat',
-      color: 'yellow',
-      owner: 'Max'
-    });
-    cars.push({
-      make: 'Tesla',
-      model: 'S',
-      color: 'black',
-      owner: 'Adriana'
-    });
-    cars.push({
-      make: 'Peugeot',
-      model: '205',
-      color: 'purple',
-      owner: 'Michel'
-    });
-    cars.push({
-      make: 'Chery',
-      model: 'S22L',
-      color: 'white',
-      owner: 'Aarav'
-    });
-    cars.push({
-      make: 'Fiat',
-      model: 'Punto',
-      color: 'violet',
-      owner: 'Pari'
-    });
-    cars.push({
-      make: 'Tata',
-      model: 'Nano',
-      color: 'indigo',
-      owner: 'Valeria'
-    });
-    cars.push({
-      make: 'Holden',
-      model: 'Barina',
-      color: 'brown',
-      owner: 'Shotaro'
+    customers.push({
+      "userName": "marcin",
+      "transactions": [
+        {
+          "pointsAdded": 100,
+          "date": "2018-11-24T21:42:42.714Z"
+        },
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:42:46.605Z"
+        },
+        {
+          "pointsAdded": 5,
+          "date": "2018-11-24T21:42:47.581Z"
+        }
+      ],
+      "balance": 15
     });
 
-    for (let i = 0; i < cars.length; i++) {
-      cars[i].docType = 'car';
-      await stub.putState('CAR' + i, Buffer.from(JSON.stringify(cars[i])));
-      console.info('Added <--> ', cars[i]);
+    for (let i = 0; i < customers.length; i++) {
+      customers[i].docType = 'customer';
+      await stub.putState('CUSTOMER' + i, Buffer.from(JSON.stringify(customers[i])));
+      console.info('Added <--> ', customers[i]);
     }
     console.info('============= END : Initialize Ledger ===========');
   }
 
-  async createCar(stub, args) {
-    console.info('============= START : Create Car ===========');
-    if (args.length != 5) {
-      throw new Error('Incorrect number of arguments. Expecting 5');
-    }
+  // async createUser(stub, args) {
+  //   console.info('============= START : Create Car ===========');
+  //   if (args.length != 2) {
+  //     throw new Error('Incorrect number of arguments. Expecting 5');
+  //   }
+  //   var userName = args[1];
 
-    var car = {
-      docType: 'car',
-      make: args[1],
-      model: args[2],
-      color: args[3],
-      owner: args[4]
-    };
+  //   var customer =
+  //   {
+  //     docType: 'customer',
+  //     userName,
+  //     transactions: [],
+  //     balance: 0
+  //   }
 
-    await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
-    console.info('============= END : Create Car ===========');
-  }
+  //   await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
+  //   console.info('============= END : Create Car ===========');
+  // }
 
-  async queryAllCars(stub, args) {
+  async queryAllCustomers(stub, args) {
 
-    let startKey = 'CAR0';
-    let endKey = 'CAR999';
-    endKey = 'CAR1';
+    let startKey = 'CUSTOMER0';
+    let endKey = 'CUSTOMER999';
 
     let iterator = await stub.getStateByRange(startKey, endKey);
 
@@ -176,7 +173,7 @@ let Chaincode = class {
     }
   }
 
-  async changeCarOwner(stub, args) {
+  async addPoints(stub, args) {
     console.info('============= START : changeCarOwner ===========');
     if (args.length != 2) {
       throw new Error('Incorrect number of arguments. Expecting 2');
